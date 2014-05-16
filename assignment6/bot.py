@@ -89,13 +89,16 @@ class Model(Handler):
     def on_close(self):
         print "Server has been closed."
         os._exit(0)
-    
+
     def on_msg(self, data):
-        self.players = {name: self.make_rect(player) for name, player in data['players'].items()}
+        if self.players != {}:
+           if self.pellets != [self.make_rect(p) for p in data['pellets']]:
+              print "Ate pellet!"
         self.myname = data['myname']
         self.borders = [self.make_rect(border) for border in data['borders']]
         self.pellets = [self.make_rect(pellet) for pellet in data['pellets']]
-
+        self.players = {name: self.make_rect(p) for name, p in data['players'].items()}
+        
     def update(self):
         # move me
         self.mybox[0] += self.mydir[0]
